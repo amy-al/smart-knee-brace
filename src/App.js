@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+
 import './App.css';
 
 function isWebBLEAvailable(){
@@ -9,30 +9,29 @@ function isWebBLEAvailable(){
   return true
 }
 
-function getDeviceInfo(){
-  let options = {
+function connectBluetooth(){
+  if(isWebBLEAvailable()){
+    let options = {
       acceptAllDevices: true
   }
   console.log("requesting BLE device info...")
   navigator.bluetooth.requestDevice(options).then(device =>{
-      console.log("Bluetooth device connected:" + device)
-      return device.gatt.connect()
+    device.gatt.connect()
+    console.log("Connected to " + device.name)
   }).catch(error=> {
       console.log("Request device error:" + error)
   })
+  }
 }
 
-function connectToBluetooth(){
-    if(isWebBLEAvailable()){
-      getDeviceInfo()
-    }
-}
+// set up event listeners
+
 
 function App() {
   return (
     <div className="App">
-      <button onClick={connectToBluetooth}>
-        Connect with the Flora BLE.
+      <button onClick={connectBluetooth}>
+        Connect
       </button>
     </div>
   );
