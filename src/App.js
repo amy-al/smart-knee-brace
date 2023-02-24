@@ -16,6 +16,7 @@ function getDeviceInfo(){
   console.log("requesting BLE device info...")
   navigator.bluetooth.requestDevice(options).then(device =>{
       console.log("Bluetooth device connected:" + device)
+      return device.gatt.connect()
   }).catch(error=> {
       console.log("Request device error:" + error)
   })
