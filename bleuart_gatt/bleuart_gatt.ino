@@ -20,6 +20,9 @@
 
 #include "BluefruitConfig.h"
 
+int32_t flexServiceId;
+int32_t flexCharId;
+
 /*=========================================================================
     APPLICATION SETTINGS
 
@@ -68,7 +71,7 @@ Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
 Adafruit_BluefruitLE_UART ble(Serial1, BLUEFRUIT_UART_MODE_PIN);
 
 /* ...hardware SPI, using SCK/MOSI/MISO hardware SPI pins and then user selected CS/IRQ/RST */
-// Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
+//Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
 
 /* ...software SPI, using SCK/MOSI/MISO user-defined SPI pins and then user selected CS/IRQ/RST */
 //Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_SCK, BLUEFRUIT_SPI_MISO,
@@ -122,6 +125,33 @@ void setup(void)
   /* Print Bluefruit information */
   ble.info();
 
+  while (! ble.sendCommandCheckOK(F("AT+GAPDEVNAME=Smart Knee Brace")) ) {
+    Serial.println(F("Could not set device name?"));
+    Serial.println(F("Setting device name to 'Smart Knee Brace': "));
+  }
+
+  Serial.println(F("Adding the Flex Sensor Service definition (UUID = 59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73): "));
+  bool success = false;
+  while (!success)
+  {
+    success = ble.sendCommandWithIntReply( F("AT+GATTADDSERVICE=UUID128=59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73"), &flexServiceId);
+    if (!success)
+    {
+      Serial.println(F("Could not add Flex Sensor service"));
+    }
+  }
+
+  Serial.println(F("Adding the Flex Sensor characteristic (UUID = 0x0002): "));
+  success = false;
+  while (!success)
+  {
+    success = ble.sendCommandWithIntReply( F("AT+GATTADDCHAR=UUID=0x0002, PROPERTIES=0x0a, MIN_LEN=1, MAX_LEN=20, VALUE=00-00"), &flexCharId);
+    if (!success)
+    {
+      Serial.println(F("Could not add Flex Sensor characteristic"));
+    }
+  }
+
   Serial.println(F("Please use Adafruit Bluefruit LE app to connect in UART mode"));
   Serial.println(F("Then Enter characters to send to Bluefruit"));
   Serial.println();
@@ -151,33 +181,38 @@ void setup(void)
 /**************************************************************************/
 void loop(void)
 {
-  // Check for user input
-  char inputs[BUFSIZE+1];
 
-  if ( getUserInput(inputs, BUFSIZE) )
-  {
-    // Send characters to Bluefruit
-    Serial.print("[Send] ");
-    Serial.println(inputs);
+    ble.print( F("AT+GATTCHAR=") );
+    ble.print( flexCharId );
+    ble.println(0, DEC);
 
-    ble.print("AT+BLEUARTTX=");
-    ble.println(inputs);
+  // // Check for user input
+  // char inputs[BUFSIZE+1];
 
-    // check response stastus
-    if (! ble.waitForOK() ) {
-      Serial.println(F("Failed to send?"));
-    }
-  }
+  // if ( getUserInput(inputs, BUFSIZE) )
+  // {
+  //   // Send characters to Bluefruit
+  //   Serial.print("[Send] ");
+  //   Serial.println(inputs);
 
-  // Check for incoming characters from Bluefruit
-  ble.println("AT+BLEUARTRX");
-  ble.readline();
-  if (strcmp(ble.buffer, "OK") == 0) {
-    // no data
-    return;
-  }
-  // Some data was found, its in the buffer
-  Serial.print(F("[Recv] ")); Serial.println(ble.buffer);
+  //   ble.print("AT+BLEUARTTX=");
+  //   ble.println(inputs);
+
+  //   // check response stastus
+  //   if (! ble.waitForOK() ) {
+  //     Serial.println(F("Failed to send?"));
+  //   }
+  // }
+
+  // // Check for incoming characters from Bluefruit
+  // ble.println("AT+BLEUARTRX");
+  // ble.readline();
+  // if (strcmp(ble.buffer, "OK") == 0) {
+  //   // no data
+  //   return;
+  // }
+  // // Some data was found, its in the buffer
+  // Serial.print(F("[Recv] ")); Serial.println(ble.buffer);
   ble.waitForOK();
 }
 

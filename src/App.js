@@ -21,7 +21,7 @@ function connectBluetooth(){
       device.gatt.connect()
       console.log("Connected to " + device.name)
       console.log("UUID: " + device.gatt.uuid) // seems that uuid has not been set
-      console.log("Service options: " + device.gatt.getPrimaryServices("6e400001-b5a3-f393-e0a9-e50e24dcca9e"))
+      console.log("Service options: " + device.gatt.getPrimaryServices("59f5bf56-803a-4525-8202-1284c6d0f073"))
     }).then(server => {
       // Getting Battery Service…
       return server.getPrimaryService('battery_service');
