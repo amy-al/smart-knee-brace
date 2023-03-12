@@ -14,6 +14,7 @@
 
 #include <Arduino.h>
 #include <SPI.h>
+#include <Adafruit_BluefruitLE_UART.h>
 #include "Adafruit_BLE.h"
 #include "Adafruit_BluefruitLE_SPI.h"
 #include "Adafruit_BluefruitLE_UART.h"
@@ -21,6 +22,7 @@
 #include "BluefruitConfig.h"
 
 int32_t flexServiceId;
+int32_t batteryServiceId;
 int32_t flexCharId;
 
 /*=========================================================================
@@ -141,6 +143,17 @@ void setup(void)
     }
   }
 
+  Serial.println(F("Adding the Battery Service definition (UUID = 00-00-18-0f-00-00-10-00-80-00-00-80-5f-9b-34-fb): "));
+  success = false;
+  while (!success)
+  {
+    success = ble.sendCommandWithIntReply( F("AT+GATTADDSERVICE=UUID=0x180F"), &batteryServiceId);
+    if (!success)
+    {
+      Serial.println(F("Could not add Battery service"));
+    }
+  }
+
   Serial.println(F("Adding the Flex Sensor characteristic (UUID = 0x0002): "));
   success = false;
   while (!success)
@@ -153,8 +166,6 @@ void setup(void)
   }
 
   Serial.println(F("Please use Adafruit Bluefruit LE app to connect in UART mode"));
-  Serial.println(F("Then Enter characters to send to Bluefruit"));
-  Serial.println();
 
   ble.verbose(false);  // debug info is a little annoying after this point!
 
@@ -182,10 +193,16 @@ void setup(void)
 void loop(void)
 {
 
-    ble.print( F("AT+GATTCHAR=") );
-    ble.print( flexCharId );
-    ble.println(0, DEC);
+  ble.print("AT+BLEUARTTX=");
+  ble.println("Test");
 
+  //   // check response stastus
+  if (! ble.waitForOK() ) {
+       Serial.println(F("Failed to send?"));
+  }
+  else{
+    Serial.println("Sent");
+  }
   // // Check for user input
   // char inputs[BUFSIZE+1];
 
