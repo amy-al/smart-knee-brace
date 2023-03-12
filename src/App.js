@@ -9,39 +9,42 @@ function isWebBLEAvailable(){
   return true
 }
 
+
 function connectBluetooth(){
   if(isWebBLEAvailable()){
     let options = {
-      filters: [{name: 'Adafruit Bluefruit LE'}, { services: ["c48e6067-5295-48d3-8d5c-0395f61792b1"] },],
-      optionalServices: ["battery_service"],
-      // acceptAllDevices: true
+      acceptAllDevices: true,
+      //filters: [{name: 'Smart Knee Brace'},],
+      optionalServices: ["6e400001-b5a3-f393-e0a9-e50e24dcca9e"], // 59f5bf56-803a-4525-8202-1284c6d0f073
     }
     console.log("requesting BLE device info...")
     navigator.bluetooth.requestDevice(options).then(device =>{
-      device.gatt.connect()
-      console.log("Connected to " + device.name)
-      console.log("UUID: " + device.gatt.uuid) // seems that uuid has not been set
-      console.log("Service options: " + device.gatt.getPrimaryServices("59f5bf56-803a-4525-8202-1284c6d0f073"))
-    }).then(server => {
-      // Getting Battery Service…
-      return server.getPrimaryService('battery_service');
+      device.gatt.connect().then(server =>{
+        console.log(server)
+        console.log("Connected to " + server.device.name)
+        console.log("UUID: " + server.device.id) // seems that uuid has not been set
+        server.getPrimaryServices("6e400001-b5a3-f393-e0a9-e50e24dcca9e").then(services =>{
+          console.log(services)
+          console.log(typeof services)
+          services[0].getCharacteristic("6e400002-b5a3-f393-e0a9-e50e24dcca9e").then(characteristic =>{
+            console.log(characteristic)
+            characteristic.startNotifications()
+            characteristic.addEventListener("characteristicvaluechanged", handleChange);
+            // characteristic.readValue().then(value =>{
+            //   console.log(`message is: ${value.getUint8(0)}`)
+            // })
+          })
+        })
+      })
     })
-    .then(service => {
-      // Getting Battery Level Characteristic…
-      return service.getCharacteristic('battery_level');
-    })
-    .then(characteristic => {
-      // Reading Battery Level…
-      return characteristic.readValue();
-    })
-    .then(value => {
-      console.log(`Battery percentage is ${value.getUint8(0)}`);
-    })
-    .catch(error => { console.error(error); });
   }
 }
 
 // set up event listeners
+function handleChange(event){
+  const val = event.target.value.getUint8(0);
+  console.log("value is" + val);
+}
 
 
 function App() {
