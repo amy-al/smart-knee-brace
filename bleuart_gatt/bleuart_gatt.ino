@@ -21,9 +21,9 @@
 
 #include "BluefruitConfig.h"
 
-int32_t flexServiceId;
+int32_t sensorServiceId;
 int32_t batteryServiceId;
-int32_t flexCharId;
+int32_t sensorCharId;
 
 /*=========================================================================
     APPLICATION SETTINGS
@@ -132,14 +132,25 @@ void setup(void)
     Serial.println(F("Setting device name to 'Smart Knee Brace': "));
   }
 
-  Serial.println(F("Adding the Flex Sensor Service definition (UUID = 59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73): "));
+  Serial.println(F("Adding the sensor Service definition (UUID = 59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73): "));
   bool success = false;
   while (!success)
   {
-    success = ble.sendCommandWithIntReply( F("AT+GATTADDSERVICE=UUID128=59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73"), &flexServiceId);
+    success = ble.sendCommandWithIntReply( F("AT+GATTADDSERVICE=UUID128=59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73"), &sensorServiceId);
     if (!success)
     {
-      Serial.println(F("Could not add Flex Sensor service"));
+      Serial.println(F("Could not add sensor service"));
+    }
+  }
+
+  Serial.println(F("Adding the sensor characteristic (UUID = 0x0002): "));
+  success = false;
+  while (!success)
+  {
+    success = ble.sendCommandWithIntReply( F("AT+GATTADDCHAR=UUID=0x0002, PROPERTIES=0x12, MIN_LEN=1, MAX_LEN=10, VALUE=0"), &sensorCharId);
+    if (!success)
+    {
+      Serial.println(F("Could not add sensor characteristic"));
     }
   }
 
@@ -154,20 +165,14 @@ void setup(void)
     }
   }
 
-  Serial.println(F("Adding the Flex Sensor characteristic (UUID = 0x0002): "));
-  success = false;
-  while (!success)
-  {
-    success = ble.sendCommandWithIntReply( F("AT+GATTADDCHAR=UUID=0x0002, PROPERTIES=0x0a, MIN_LEN=1, MAX_LEN=20, VALUE=00-00"), &flexCharId);
-    if (!success)
-    {
-      Serial.println(F("Could not add Flex Sensor characteristic"));
-    }
-  }
-
-  Serial.println(F("Please use Adafruit Bluefruit LE app to connect in UART mode"));
 
   ble.verbose(false);  // debug info is a little annoying after this point!
+
+  /* Reset the device for the new service setting changes to take effect */
+  Serial.print(F("Performing a SW reset (service changes require a reset): "));
+  ble.reset();
+
+  Serial.println();
 
   /* Wait for connection */
   while (! ble.isConnected()) {
@@ -192,69 +197,20 @@ void setup(void)
 /**************************************************************************/
 void loop(void)
 {
+  int sensorReading = random(1024);
 
-  ble.print("AT+BLEUARTTX=");
-  ble.println("Test");
+  Serial.print(F("Updating sensor value to "));
+  Serial.println(sensorReading);
 
-  //   // check response stastus
+  ble.print(F("AT+GATTCHAR="));
+  ble.print(sensorCharId);
+  ble.print(F(","));
+  ble.println(sensorReading);
+
+  // check response stastus
   if (! ble.waitForOK() ) {
-       Serial.println(F("Failed to send?"));
+    Serial.println(F("Failed to send?"));
   }
-  else{
-    Serial.println("Sent");
-  }
-  // // Check for user input
-  // char inputs[BUFSIZE+1];
 
-  // if ( getUserInput(inputs, BUFSIZE) )
-  // {
-  //   // Send characters to Bluefruit
-  //   Serial.print("[Send] ");
-  //   Serial.println(inputs);
-
-  //   ble.print("AT+BLEUARTTX=");
-  //   ble.println(inputs);
-
-  //   // check response stastus
-  //   if (! ble.waitForOK() ) {
-  //     Serial.println(F("Failed to send?"));
-  //   }
-  // }
-
-  // // Check for incoming characters from Bluefruit
-  // ble.println("AT+BLEUARTRX");
-  // ble.readline();
-  // if (strcmp(ble.buffer, "OK") == 0) {
-  //   // no data
-  //   return;
-  // }
-  // // Some data was found, its in the buffer
-  // Serial.print(F("[Recv] ")); Serial.println(ble.buffer);
-  ble.waitForOK();
-}
-
-/**************************************************************************/
-/*!
-    @brief  Checks for user input (via the Serial Monitor)
-*/
-/**************************************************************************/
-bool getUserInput(char buffer[], uint8_t maxSize)
-{
-  // timeout in 100 milliseconds
-  TimeoutTimer timeout(100);
-
-  memset(buffer, 0, maxSize);
-  while( (!Serial.available()) && !timeout.expired() ) { delay(1); }
-
-  if ( timeout.expired() ) return false;
-
-  delay(2);
-  uint8_t count=0;
-  do
-  {
-    count += Serial.readBytes(buffer+count, maxSize);
-    delay(2);
-  } while( (count < maxSize) && (Serial.available()) );
-
-  return true;
+  //delay(50);
 }
