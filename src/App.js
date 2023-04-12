@@ -24,13 +24,17 @@ function App() {
   );
   
   function handleChange(event) {
-    setSensorReading(event.target.value.getUint16(0, true))
+    const reading = event.target.value.getUint16(0, true)
+    const voltage = reading / 1023.0 * 3.3
+    const resistance = (voltage * 1000) / (3.3 - voltage)
+    const length = resistance / 350.0 
+    setSensorReading(length)
   }
   function connectBluetooth() {
     if (isWebBLEAvailable()){
       let options = {
-        //acceptAllDevices: true,
-        filters: [{name: 'Smart Knee Brace'},],
+        acceptAllDevices: true,
+        // filters: [{name: 'Smart Knee Brace'},],
         optionalServices: [
           "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
           "59f5bf56-803a-4525-8202-1284c6d0f073"], // 59f5bf56-803a-4525-8202-1284c6d0f073
