@@ -1,6 +1,8 @@
 
 import './App.css';
 import { useState } from 'react';
+import GaugeChart from 'react-gauge-chart';
+
 
 function isWebBLEAvailable(){
   if(!navigator.bluetooth){
@@ -13,6 +15,7 @@ function isWebBLEAvailable(){
 function App() {
   const [sensorReading, setSensorReading] = useState(-1);
   const readingDisplay = sensorReading !== -1 ? <p>{sensorReading}</p> : null;
+  console.log(readingDisplay)
   
   return (
     <div className="App">
@@ -20,6 +23,14 @@ function App() {
       <button onClick={connectBluetooth}>
         Connect
       </button>
+      <div>
+        <GaugeChart id="stretch-gauge"
+          nrOfLevels={20}
+          percent={readingDisplay / 10}
+          textColor={"#123456"}
+          needleColor={"#000000"}
+        />
+      </div>
     </div>
   );
   

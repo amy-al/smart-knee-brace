@@ -197,10 +197,11 @@ void setup(void)
 /**************************************************************************/
 void loop(void)
 {
-  int sensorReading = random(1024);
+
+  int sensorReading = analogRead(STRETCH_PIN);
 
   Serial.print(F("Updating sensor value to "));
-  Serial.println(sensorReading);
+  Serial.println(length);
 
   ble.print(F("AT+GATTCHAR="));
   ble.print(sensorCharId);
