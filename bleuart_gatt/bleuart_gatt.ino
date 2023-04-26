@@ -169,8 +169,9 @@ void setup(void)
   ble.verbose(false);  // debug info is a little annoying after this point!
 
   /* Reset the device for the new service setting changes to take effect */
-  Serial.print(F("Performing a SW reset (service changes require a reset): "));
+  Serial.println(F("Performing a SW reset (service changes require a reset): "));
   ble.reset();
+  Serial.print(F("Success!"));
 
   Serial.println();
 
@@ -201,7 +202,7 @@ void loop(void)
   int sensorReading = analogRead(STRETCH_PIN);
 
   Serial.print(F("Updating sensor value to "));
-  Serial.println(length);
+  Serial.println(sensorReading);
 
   ble.print(F("AT+GATTCHAR="));
   ble.print(sensorCharId);

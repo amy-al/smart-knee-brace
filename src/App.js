@@ -26,7 +26,7 @@ function App() {
       <div>
         <GaugeChart id="stretch-gauge"
           nrOfLevels={20}
-          percent={readingDisplay / 10}
+          percent={(sensorReading - 2) / 4}
           textColor={"#123456"}
           needleColor={"#000000"}
         />
