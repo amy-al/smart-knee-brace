@@ -2,6 +2,7 @@
 import './App.css';
 import { useState } from 'react';
 import GaugeChart from 'react-gauge-chart';
+import { Link, BrowserRouter } from "react-router-dom";
 
 
 function isWebBLEAvailable(){
