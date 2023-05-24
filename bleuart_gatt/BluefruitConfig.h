@@ -33,6 +33,7 @@
 // ----------------------------------------------------------------------------------------------
 #define BLUEFRUIT_UART_MODE_PIN        -1    // Set to -1 if unused
 #define STRETCH_PIN 10
+#define INDICATOR_PIN 7
 
 
 // SHARED SPI SETTINGS

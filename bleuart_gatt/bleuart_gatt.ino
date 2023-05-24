@@ -84,7 +84,12 @@ Adafruit_BluefruitLE_UART ble(Serial1, BLUEFRUIT_UART_MODE_PIN);
 // A small helper
 void error(const __FlashStringHelper*err) {
   Serial.println(err);
-  while (1);
+  while (1){
+    digitalWrite(INDICATOR_PIN, HIGH);
+    delay(500);
+    digitalWrite(INDICATOR_PIN, LOW);
+    delay(500);
+  };
 }
 
 /**************************************************************************/
@@ -107,7 +112,7 @@ void setup(void)
 
   if ( !ble.begin(VERBOSE_MODE) )
   {
-    error(F("Couldn't find Bluefruit, make sure it's in CoMmanD mode & check wiring?"));
+    error(F("Couldn't find Bluefruit, make sure it's in Command mode & check wiring?"));
   }
   Serial.println( F("OK!") );
 
@@ -172,6 +177,8 @@ void setup(void)
   Serial.println(F("Performing a SW reset (service changes require a reset): "));
   ble.reset();
   Serial.print(F("Success!"));
+  digitalWrite(INDICATOR_PIN, HIGH);
+ 
 
   Serial.println();
 
@@ -179,6 +186,7 @@ void setup(void)
   while (! ble.isConnected()) {
       delay(500);
   }
+  digitalWrite(INDICATOR_PIN, LOW);
 
   // LED Activity command is only supported from 0.6.6
   if ( ble.isVersionAtLeast(MINIMUM_FIRMWARE_VERSION) )

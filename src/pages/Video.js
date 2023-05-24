@@ -16,6 +16,14 @@ export default function VidApp() {
   const [paused, setPaused] = useState(true);
   const timerRef = useRef();
 
+  let message;
+  if (timer > 0 && paused)
+    message = "Click button to start!";
+  else if (timer > 0)
+    message = "Keep stretching!";
+  else
+    message = "Stop";
+
   useEffect(() => {
     if (!paused) {
       timerRef.current = setInterval(() => {
@@ -57,7 +65,7 @@ export default function VidApp() {
     </div>
     <div className="timer-container">
       <div className="timer">{timer.toFixed(1)}</div>
-      <div className="tagline">Keep Stretching</div>
+      <div className="tagline">{message}</div>
       {paused ? (
           <button className="start-timer" onClick={handleStartTimer}>
             Start

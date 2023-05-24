@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import { Link } from "react-router-dom";
 
 import Select from 'react-select'
-
+import './home.css';
 
 
 const options = [
@@ -28,7 +28,7 @@ const DropdownMenu = () => (
   
 const Home = () => {
   return (
-    <div>
+    <div className="main-page">
       <h1>Welcome to your Smart Knee Brace!</h1>
       <h2>Select your knee injury:</h2>
       <DropdownMenu/>
