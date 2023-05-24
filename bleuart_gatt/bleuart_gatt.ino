@@ -83,7 +83,7 @@ Adafruit_BluefruitLE_UART ble(Serial1, BLUEFRUIT_UART_MODE_PIN);
 
 // A small helper
 void error(const __FlashStringHelper*err) {
-  Serial.println(err);
+  //Serial.println(err);
   while (1){
     digitalWrite(INDICATOR_PIN, HIGH);
     delay(500);
@@ -100,26 +100,28 @@ void error(const __FlashStringHelper*err) {
 /**************************************************************************/
 void setup(void)
 {
-  while (!Serial);  // required for Flora & Micro
+  digitalWrite(INDICATOR_PIN, HIGH);
+  //while (!Serial);  // required for Flora & Micro
   delay(500);
+  digitalWrite(INDICATOR_PIN, LOW);
 
   Serial.begin(115200);
-  Serial.println(F("Adafruit Bluefruit Command Mode Example"));
-  Serial.println(F("---------------------------------------"));
+  //Serial.println(F("Adafruit Bluefruit Command Mode Example"));
+  //Serial.println(F("---------------------------------------"));
 
   /* Initialise the module */
-  Serial.print(F("Initialising the Bluefruit LE module: "));
+  //Serial.print(F("Initialising the Bluefruit LE module: "));
 
   if ( !ble.begin(VERBOSE_MODE) )
   {
     error(F("Couldn't find Bluefruit, make sure it's in Command mode & check wiring?"));
   }
-  Serial.println( F("OK!") );
+  //Serial.println( F("OK!") );
 
   if ( FACTORYRESET_ENABLE )
   {
     /* Perform a factory reset to make sure everything is in a known state */
-    Serial.println(F("Performing a factory reset: "));
+    //Serial.println(F("Performing a factory reset: "));
     if ( ! ble.factoryReset() ){
       error(F("Couldn't factory reset"));
     }
@@ -128,45 +130,57 @@ void setup(void)
   /* Disable command echo from Bluefruit */
   ble.echo(false);
 
-  Serial.println("Requesting Bluefruit info:");
+  //Serial.println("Requesting Bluefruit info:");
   /* Print Bluefruit information */
   ble.info();
 
   while (! ble.sendCommandCheckOK(F("AT+GAPDEVNAME=Smart Knee Brace")) ) {
-    Serial.println(F("Could not set device name?"));
-    Serial.println(F("Setting device name to 'Smart Knee Brace': "));
+    //Serial.println(F("Could not set device name?"));
+    //Serial.println(F("Setting device name to 'Smart Knee Brace': "));
+    digitalWrite(INDICATOR_PIN, HIGH);
+    delay(100);
+    digitalWrite(INDICATOR_PIN, LOW);
+    delay(1000);
   }
 
-  Serial.println(F("Adding the sensor Service definition (UUID = 59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73): "));
+  //Serial.println(F("Adding the sensor Service definition (UUID = 59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73): "));
   bool success = false;
   while (!success)
   {
     success = ble.sendCommandWithIntReply( F("AT+GATTADDSERVICE=UUID128=59-f5-bf-56-80-3a-45-25-82-02-12-84-c6-d0-f0-73"), &sensorServiceId);
     if (!success)
     {
-      Serial.println(F("Could not add sensor service"));
+      //Serial.println(F("Could not add sensor service"));
+      digitalWrite(INDICATOR_PIN, HIGH);
+      delay(100);
+      digitalWrite(INDICATOR_PIN, LOW);
+      delay(100);
+      digitalWrite(INDICATOR_PIN, HIGH);
+      delay(100);
+      digitalWrite(INDICATOR_PIN, LOW);
+      delay(1000);
     }
   }
 
-  Serial.println(F("Adding the sensor characteristic (UUID = 0x0002): "));
+  //Serial.println(F("Adding the sensor characteristic (UUID = 0x0002): "));
   success = false;
   while (!success)
   {
     success = ble.sendCommandWithIntReply( F("AT+GATTADDCHAR=UUID=0x0002, PROPERTIES=0x12, MIN_LEN=1, MAX_LEN=10, VALUE=0"), &sensorCharId);
     if (!success)
     {
-      Serial.println(F("Could not add sensor characteristic"));
+      //Serial.println(F("Could not add sensor characteristic"));
     }
   }
 
-  Serial.println(F("Adding the Battery Service definition (UUID = 00-00-18-0f-00-00-10-00-80-00-00-80-5f-9b-34-fb): "));
+  //Serial.println(F("Adding the Battery Service definition (UUID = 00-00-18-0f-00-00-10-00-80-00-00-80-5f-9b-34-fb): "));
   success = false;
   while (!success)
   {
     success = ble.sendCommandWithIntReply( F("AT+GATTADDSERVICE=UUID=0x180F"), &batteryServiceId);
     if (!success)
     {
-      Serial.println(F("Could not add Battery service"));
+      //Serial.println(F("Could not add Battery service"));
     }
   }
 
@@ -174,13 +188,13 @@ void setup(void)
   ble.verbose(false);  // debug info is a little annoying after this point!
 
   /* Reset the device for the new service setting changes to take effect */
-  Serial.println(F("Performing a SW reset (service changes require a reset): "));
+  //Serial.println(F("Performing a SW reset (service changes require a reset): "));
   ble.reset();
-  Serial.print(F("Success!"));
+  //Serial.print(F("Success!"));
   digitalWrite(INDICATOR_PIN, HIGH);
  
 
-  Serial.println();
+  //Serial.println();
 
   /* Wait for connection */
   while (! ble.isConnected()) {
@@ -192,10 +206,10 @@ void setup(void)
   if ( ble.isVersionAtLeast(MINIMUM_FIRMWARE_VERSION) )
   {
     // Change Mode LED Activity
-    Serial.println(F("******************************"));
-    Serial.println(F("Change LED activity to " MODE_LED_BEHAVIOUR));
+    //Serial.println(F("******************************"));
+    //Serial.println(F("Change LED activity to " MODE_LED_BEHAVIOUR));
     ble.sendCommandCheckOK("AT+HWModeLED=" MODE_LED_BEHAVIOUR);
-    Serial.println(F("******************************"));
+    //Serial.println(F("******************************"));
   }
 }
 
@@ -209,8 +223,8 @@ void loop(void)
 
   int sensorReading = analogRead(STRETCH_PIN);
 
-  Serial.print(F("Updating sensor value to "));
-  Serial.println(sensorReading);
+  //Serial.print(F("Updating sensor value to "));
+  //Serial.println(sensorReading);
 
   ble.print(F("AT+GATTCHAR="));
   ble.print(sensorCharId);
@@ -219,7 +233,7 @@ void loop(void)
 
   // check response stastus
   if (! ble.waitForOK() ) {
-    Serial.println(F("Failed to send?"));
+    //Serial.println(F("Failed to send?"));
   }
 
   //delay(50);
