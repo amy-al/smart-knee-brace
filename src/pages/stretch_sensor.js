@@ -28,7 +28,7 @@ function Stretch_sensor() {
 const Gauge = ({
   value=sensorReading,
   min=0,
-  max=100,
+  max=10,
   label="Stretch reading",
   units="Inches",
 }) => {
@@ -44,6 +44,7 @@ const Gauge = ({
     .domain([min, max])
     .range([0, 1])
   const percent = percentScale(value)
+  console.log(percent);
 
   const angleScale = scaleLinear()
     .domain([0, 1])
@@ -199,7 +200,7 @@ const getCoordsOnArc = (angle, offset=10) => [
     const voltage = reading / 1023.0 * 3.3
     const resistance = (voltage * 1000) / (3.3 - voltage)
     const length = resistance / 350.0 
-    setSensorReading(length)
+    setSensorReading(length.toFixed(2))
   }
   function connectBluetooth() {
     if (isWebBLEAvailable()){
