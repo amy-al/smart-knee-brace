@@ -20,17 +20,24 @@ function isWebBLEAvailable(){
   return true
 }
 
+
 function Stretch_sensor() {
   const [sensorReading, setSensorReading] = useState(-1);
   const readingDisplay = sensorReading !== -1 ? <p>{sensorReading}</p> : null;
   console.log(readingDisplay)
 
-  // Gauge
+  const [calibrationValue, setCalibrationValue] = useState(null); 
+  const adjustedcalibrationValue = calibrationValue != null ? parseFloat(calibrationValue.props.children) : 1;
+  console.log("Calibration Value")
+  console.log(adjustedcalibrationValue)
 
+// Gauge
 const Gauge = ({
-  value=10-sensorReading,
+  //max_value = localStorage.getItem('CalibrationValue'),
+  //ajusted_max_value = max_value !== null ? max_value : 10,
+  value=(sensorReading / adjustedcalibrationValue).toFixed(2),
   min=0,
-  max=8,
+  max=1,
   label="Stretch reading",
   units="Inches",
 }) => {
@@ -176,6 +183,10 @@ const getCoordsOnArc = (angle, offset=10) => [
   Math.sin(angle - (Math.PI / 2)) * offset,
 ]
 
+const handleCalibrationValue = (value) => {
+  setCalibrationValue(value);
+};
+
 // end of gauge
   
   return (
@@ -187,7 +198,7 @@ const getCoordsOnArc = (angle, offset=10) => [
       <div>
         < Gauge>
         </Gauge>
-        <Calibration stretch_value={readingDisplay}></Calibration>
+        <Calibration stretch_value={readingDisplay} onCalibrationValue={handleCalibrationValue}></Calibration>
         {/* <GaugeChart id="stretch-gauge"
           nrOfLevels={20}
           percent={(sensorReading - 2) / 4}
@@ -205,6 +216,7 @@ const getCoordsOnArc = (angle, offset=10) => [
     const length = resistance / 350.0 
     setSensorReading(length.toFixed(2))
   }
+
   function connectBluetooth() {
     if (isWebBLEAvailable()){
       let options = {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Calibration.css';
 
-const Calibration = ({stretch_value}) => {
+const Calibration = ({stretch_value, onCalibrationValue}) => {
   const [countdown, setCountdown] = useState(10); // Countdown timer value
   const [calibrationValue, setCalibrationValue] = useState(null); // Store fully extended value
   const [paused, setPaused] = useState(true);
@@ -20,7 +20,7 @@ const Calibration = ({stretch_value}) => {
     setCalibrationValue(currentValue);
 
     if (countdown === 0) {
-      localStorage.setItem('CalibrationValue', currentValue);
+      onCalibrationValue(currentValue);
     }
 
     // Cleanup timer when component unmounts
