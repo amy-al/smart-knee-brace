@@ -26,9 +26,9 @@ function Stretch_sensor() {
   // Gauge
 
 const Gauge = ({
-  value=sensorReading,
+  value=10-sensorReading,
   min=0,
-  max=10,
+  max=8,
   label="Stretch reading",
   units="Inches",
 }) => {
