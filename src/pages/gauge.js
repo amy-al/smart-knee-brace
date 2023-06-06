@@ -55,6 +55,10 @@ const Gauge = ({
     angle,
     1 - ((1 - 0.65) / 2),
   )
+  const targetLocation = getCoordsOnArc(
+    90,
+    1 - ((1 - 0.65) / 2),
+  )
 
   return (
     <div
@@ -105,6 +109,14 @@ const Gauge = ({
           cy={markerLocation[1]}
           r="0.2"
           stroke="#2c3e50"
+          strokeWidth="0.01"
+          fill={colorScale(percent)}
+        />
+        <circle
+          cx={targetLocation[0]}
+          cy={targetLocation[1]}
+          r="0.2"
+          stroke="#ebcc83"
           strokeWidth="0.01"
           fill={colorScale(percent)}
         />

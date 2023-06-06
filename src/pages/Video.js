@@ -3,6 +3,8 @@ import { FaHome } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import "./video.css";
 
+import Stretch_sensor from './stretch_sensor';
+
 const videos = [
   { id: 1, src: "https://gfycat.com/ifr/adeptimpurecanadagoose", name: "Video 1" },
   { id: 2, src: "https://www.youtube.com/embed/ikt6NME0k9E", name: "Video 2"  },
@@ -10,7 +12,7 @@ const videos = [
   { id: 4, src: "https://www.youtube.com/embed/bvryJd1FqyQ", name: "Video 4"  }
 ];
 
-const INTERVAL = 5000; // in milliseconds
+const INTERVAL =30000; // in milliseconds
 
 export default function VidApp() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -75,6 +77,11 @@ export default function VidApp() {
       </div>
 
       <div className="container">
+     
+      <div className="gauge">
+        <Stretch_sensor/>
+      </div>
+
 
       <div className="video-top">
         <div className="previous-video">{previousVideo.name}</div>
