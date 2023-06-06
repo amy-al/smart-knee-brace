@@ -1,6 +1,7 @@
 
 import '../App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 // import GaugeChart from 'react-gauge-chart';
 import StretchingInterface from '../stretch.js';
 
@@ -52,6 +53,19 @@ const Gauge = ({
     .clamp(true)
 
   const angle = angleScale(percent)
+  console.log("angle", angle);
+
+  const [targetAngle, setTargetAngle] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTargetAngle((prevAngle) => (prevAngle === 0 ? 100 : 0));
+    }, 1800);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const filledArc = arc()
     .innerRadius(0.65)
@@ -73,8 +87,8 @@ const Gauge = ({
     1 - ((1 - 0.65) / 2),
   )
   const targetLocation = getCoordsOnArc(
-    0,
-    1 - ((1 - 0.65) / 2),
+    targetAngle,
+    1 - ((1 - 0.65) / 2), 
   )
 
   return (
