@@ -7,11 +7,21 @@
 }
 
 .video-container {
+  position: absolute;
+  top: 150px;
   width: 50%;
   height: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.gauge {
+  position: absolute;
+  bottom: -40px; 
+  left: 45%; /* Centers the element horizontally */
+  transform: translateX(-50%); /* Centers the element precisely */
+  transform: scale(0.9);
 }
 
 iframe {
@@ -87,14 +97,23 @@ iframe {
   }
 
   .previous-video {
+    position: absolute;
+    left: -550px;
+    top: 25px;
     margin-right: 300px;
   }
 
   .next-video {
+    position: absolute;
+    left: 150px;
+    top: 25px;
     margin-left: 300px;
   }
   
   .title {
+    position: absolute;
+    left: -35px;
+    top: 25px;
     font-size: 2rem;
     font-weight: bold;
     white-space: nowrap; 

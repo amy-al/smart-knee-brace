@@ -25,6 +25,10 @@ const DropdownMenu = () => (
   <Select options={options} />
 )
 
+const handleClick = () => {
+  window.location.href = '/Video';
+};
+
   
 const Home = () => {
   return (
@@ -33,6 +37,9 @@ const Home = () => {
       <h2>Select your knee injury:</h2>
       <DropdownMenu/>
       <br />
+      <button onClick={handleClick}>
+      Stretch!
+    </button>
       <ul>
         <li>
           {/* Endpoint to route to Home component */}

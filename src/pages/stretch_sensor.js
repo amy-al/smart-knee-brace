@@ -72,6 +72,10 @@ const Gauge = ({
     angle,
     1 - ((1 - 0.65) / 2),
   )
+  const targetLocation = getCoordsOnArc(
+    0,
+    1 - ((1 - 0.65) / 2),
+  )
 
   return (
     <div
@@ -125,6 +129,14 @@ const Gauge = ({
           strokeWidth="0.01"
           fill={colorScale(percent)}
         />
+        <circle
+          cx={targetLocation[0]}
+          cy={targetLocation[1]}
+          r="0.2"
+          stroke="#2c3e50"
+          strokeWidth="0.01"
+          fill={colorScale(.1)}
+        />
         <path
           d="M0.136364 0.0290102C0.158279 -0.0096701 0.219156 -0.00967009 0.241071 0.0290102C0.297078 0.120023 0.375 0.263367 0.375 0.324801C0.375 0.422639 0.292208 0.5 0.1875 0.5C0.0852272 0.5 -1.8346e-08 0.422639 -9.79274e-09 0.324801C0.00243506 0.263367 0.0803571 0.120023 0.136364 0.0290102ZM0.1875 0.381684C0.221591 0.381684 0.248377 0.356655 0.248377 0.324801C0.248377 0.292947 0.221591 0.267918 0.1875 0.267918C0.153409 0.267918 0.126623 0.292947 0.126623 0.324801C0.126623 0.356655 0.155844 0.381684 0.1875 0.381684Z"
           transform={`rotate(${
@@ -175,12 +187,12 @@ const getCoordsOnArc = (angle, offset=10) => [
 ]
 
 // end of gauge
-  
+  // does classname matter here?
   return (
-    <div className="App">
+    <div className="App"> 
       {readingDisplay}
       <button onClick={connectBluetooth}>
-        Connect
+        Get reading
       </button>
       <div>
         < Gauge>
