@@ -9,6 +9,8 @@ import { arc } from "d3-shape"
 import { scaleLinear } from "d3-scale"
 import { format } from "d3-format"
 
+import Calibration from './Calibration';
+
 
 function isWebBLEAvailable(){
   if(!navigator.bluetooth){
@@ -185,6 +187,7 @@ const getCoordsOnArc = (angle, offset=10) => [
       <div>
         < Gauge>
         </Gauge>
+        <Calibration stretch_value={readingDisplay}></Calibration>
         {/* <GaugeChart id="stretch-gauge"
           nrOfLevels={20}
           percent={(sensorReading - 2) / 4}

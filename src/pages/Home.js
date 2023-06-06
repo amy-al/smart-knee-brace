@@ -46,6 +46,10 @@ const Home = () => {
           {/* Endpoint to route to About component */}
           <Link to="/video">Video With Timer</Link>
         </li>
+        <li>
+          {/* Endpoint to route to About component */}
+          <Link to="/calibration">Calibrate</Link>
+        </li>
       </ul>
     </div>
   );

@@ -3,6 +3,10 @@ import { arc } from "d3-shape"
 import { scaleLinear } from "d3-scale"
 import { format } from "d3-format"
 
+const [countdown, setCountdown] = useState(10); // Countdown timer value
+const [calibrationValue, setCalibrationValue] = useState(null); // Store fully extended value
+const [paused, setPaused] = useState(true);
+
 const Gauge = ({
   value=50,
   min=0,
