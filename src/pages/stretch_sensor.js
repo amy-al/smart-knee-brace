@@ -22,15 +22,15 @@ function isWebBLEAvailable(){
 }
 
 
+
 function Stretch_sensor() {
   const [sensorReading, setSensorReading] = useState(-1);
   const readingDisplay = sensorReading !== -1 ? <p>{sensorReading}</p> : null;
-  console.log(readingDisplay)
+  // console.log("readingDisplay", readingDisplay)
 
-  const [calibrationValue, setCalibrationValue] = useState(null); 
-  const adjustedcalibrationValue = calibrationValue != null ? parseFloat(calibrationValue.props.children) : 1;
-  console.log("Calibration Value")
-  console.log(adjustedcalibrationValue)
+  const calibrationValue = localStorage.getItem("calibrationValue")
+  const adjustedcalibrationValue = calibrationValue != null ? calibrationValue : 1;
+  // console.log("Calibration Value", adjustedcalibrationValue)
 
 // Gauge
 const Gauge = ({
@@ -54,7 +54,7 @@ const Gauge = ({
     .domain([min, max])
     .range([0, 1])
   const percent = percentScale(value)
-  console.log(percent);
+  // console.log("percent", percent);
 
   const angleScale = scaleLinear()
     .domain([0, 1])
@@ -62,7 +62,7 @@ const Gauge = ({
     .clamp(true)
 
   const angle = angleScale(percent)
-  console.log("angle", angle);
+  // console.log("angle", angle);
 
   const [targetAngle, setTargetAngle] = useState(0);
 
@@ -209,22 +209,21 @@ const getCoordsOnArc = (angle, offset=10) => [
   Math.sin(angle - (Math.PI / 2)) * offset,
 ]
 
-const handleCalibrationValue = (value) => {
-  setCalibrationValue(value);
-};
+// const handleCalibrationValue = (value) => {
+//   setCalibrationValue(value);
+// };
 
 // end of gauge
   // does classname matter here?
   return (
     <div className="App"> 
-      {readingDisplay}
       <button onClick={connectBluetooth}>
         Get reading
       </button>
       <div>
         < Gauge>
         </Gauge>
-        <Calibration stretch_value={readingDisplay} onCalibrationValue={handleCalibrationValue}></Calibration>
+        {/* <Calibration stretch_value={readingDisplay} onCalibrationValue={handleCalibrationValue}></Calibration> */}
         {/* <GaugeChart id="stretch-gauge"
           nrOfLevels={20}
           percent={(sensorReading - 2) / 4}
@@ -241,6 +240,7 @@ const handleCalibrationValue = (value) => {
     const resistance = (voltage * 1000) / (3.3 - voltage)
     const length = resistance / 350.0 
     setSensorReading(length.toFixed(2))
+    localStorage.setItem("sensorValue", length.toFixed(2));
   }
 
   function connectBluetooth() {
@@ -260,7 +260,7 @@ const handleCalibrationValue = (value) => {
       }).then(services => {
         return services[0].getCharacteristic(0x0002)
       }).then(characteristic => {
-        console.log(characteristic)
+        console.log("characteristic", characteristic)
         return characteristic.startNotifications()
       }).then(characteristic => {
         characteristic.addEventListener('characteristicvaluechanged', handleChange)

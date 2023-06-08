@@ -21,6 +21,10 @@ const options = [
 
 // const [selectedOption, setSelectedOption] = useState(null); // use the selected option and change the state
 
+const val = localStorage.getItem("sensorValue");
+console.log(val)
+
+
 const DropdownMenu = () => (
   <Select options={options} />
 )
