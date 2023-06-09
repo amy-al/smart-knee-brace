@@ -5,7 +5,6 @@ import "./video.css";
 
 import Stretch_sensor from './stretch_sensor';
 import Timer from "./Timer";
-import VidDisplay from "./Video_Display";
 
 const videos = [
   { id: 1, src: "https://gfycat.com/ifr/adeptimpurecanadagoose", name: "Video 1" },
@@ -15,18 +14,8 @@ const videos = [
 ];
 
 
-export default function VidApp() {
+export default function VidDisplay() {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  /*
-  let message;
-  if (timer > 0 && paused)
-    message = "Click button to start!";
-  else if (timer > 0)
-    message = "Keep stretching!";
-  else
-    message = "Stop";
-  */
 
   const activeVideo = videos[currentIndex];
   var previousVideo = videos[currentIndex - 1];
@@ -44,28 +33,41 @@ export default function VidApp() {
 
   return (
     <div>
-      <div className="navbar">
-        <Link className="home-button"
-              tabIndex={-1}
-              to="/"
-        >
-          <FaHome />
-        </Link>
-      </div>
 
       <div className="container">
-     
-      <div className="gauge">
-        <Stretch_sensor sensor_width="15rem"/>
+
+      <Timer handleCallback={NextVideo}></Timer>
+
+      <div className="video-top">
+        <div className="previous-video">{previousVideo.name}</div>
+        <div className="title">{activeVideo.name}</div>
+        <div className="next-video">{nextVideo.name}</div>
       </div>
 
-      <div>
-        <VidDisplay></VidDisplay>
+      <div className="video-container">
+        <iframe
+          key={activeVideo.id}
+          title={`video-${activeVideo.id}`}
+          src={activeVideo.src}
+          frameBorder="0"
+          allowFullScreen
+        />
       </div>
 
-
-
-      
+      <div className="navigation-container">
+        <button
+          className="previous-button"
+          onClick={() => setCurrentIndex((currentIndex - 1 + videos.length) % videos.length)}
+        >
+          Previous
+        </button>
+        <button
+          className="next-button"
+          onClick={() => setCurrentIndex((currentIndex + 1) % videos.length)}
+        >
+          Next
+        </button>
+      </div>
     </div>
   </div>
     );

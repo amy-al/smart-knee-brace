@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Calibration.css';
-import Stretch_sensor from './stretch_sensor';
+import Stretch_sensor from './calibration_stretch_sensor';
 import { FaHome } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
