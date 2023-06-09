@@ -79,16 +79,17 @@ const Gauge = ({
 
   useEffect(() => {
 
-    let moveRight = true;
+    let moveRight = null;
     const interval = setInterval(() => {
 
-      if(targetAngle == 1){
+      if(targetAngle >= 1.0){
         moveRight = false; 
       }
 
-      if(targetAngle == 0){
+      if(targetAngle <= 0.0 || moveRight == null){
         moveRight = true; 
       }
+
 
       if(moveRight){
         setTargetAngle(targetAngle + 1)
@@ -97,7 +98,10 @@ const Gauge = ({
         setTargetAngle(targetAngle - 1)
       }
 
-    }, 100);
+      console.log("targetAngle", targetAngle)
+      console.log("moveRight", moveRight)
+
+    }, 1500);
 
     return () => {
       clearInterval(interval);
