@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import "./video.css";
 
 import Stretch_sensor from './stretch_sensor';
+import Timer from "./Timer";
 
 const videos = [
   { id: 1, src: "https://gfycat.com/ifr/adeptimpurecanadagoose", name: "Video 1" },
@@ -12,13 +13,9 @@ const videos = [
   { id: 4, src: "https://www.youtube.com/embed/bvryJd1FqyQ", name: "Video 4"  }
 ];
 
-const INTERVAL =30000; // in milliseconds
 
 export default function VidApp() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [timer, setTimer] = useState(INTERVAL / 1000);
-  const [paused, setPaused] = useState(true);
-  const timerRef = useRef();
 
   /*
   let message;
@@ -30,38 +27,17 @@ export default function VidApp() {
     message = "Stop";
   */
 
-  useEffect(() => {
-    if (!paused) {
-      timerRef.current = setInterval(() => {
-        setTimer((timer) => timer - 0.1);
-      }, 100);
-    }
-
-    return () => clearInterval(timerRef.current);
-  }, [paused]);
-
-  useEffect(() => {
-    if (timer < 0) {
-      setTimer(INTERVAL / 1000);
-      setCurrentIndex((currentIndex) => (currentIndex + 1) % videos.length);
-      setPaused(true);
-    }
-  }, [timer]);
-
-  const handleResetTimer = () => {
-    setTimer(INTERVAL / 1000);
-  };
-
-  const handleStartTimer = () => {
-    setPaused(false);
-  };
-
   const activeVideo = videos[currentIndex];
   var previousVideo = videos[currentIndex - 1];
   var nextVideo = videos[(currentIndex + 1) % videos.length];
 
   if(currentIndex == 0){
     previousVideo = videos[videos.length - 1];
+  }
+
+  function NextVideo(done){
+    if(done)
+      setCurrentIndex((currentIndex) => (currentIndex + 1) % videos.length);
   }
 
 
@@ -82,19 +58,7 @@ export default function VidApp() {
         <Stretch_sensor sensor_width="15rem"/>
       </div>
 
-
-      <div className="timer-container">
-        <div className="timer">{timer.toFixed(1)}</div>
-        {paused ? (
-            <button className="start-timer" onClick={handleStartTimer}>
-              Start
-            </button>
-          ) : (
-            <button className="reset-timer" onClick={handleResetTimer}>
-              Reset Timer
-            </button>
-          )}
-      </div>
+      <Timer handleCallback={NextVideo}></Timer>
 
       <div className="video-top">
         <div className="previous-video">{previousVideo.name}</div>

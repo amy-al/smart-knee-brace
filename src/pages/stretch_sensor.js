@@ -78,14 +78,31 @@ const Gauge = ({
   const [targetAngle, setTargetAngle] = useState(0);
 
   useEffect(() => {
+
+    let moveRight = true;
     const interval = setInterval(() => {
-      setTargetAngle((prevAngle) => (prevAngle === 0 ? 100 : 0));
-    }, 1800);
+
+      if(targetAngle == 1){
+        moveRight = false; 
+      }
+
+      if(targetAngle == 0){
+        moveRight = true; 
+      }
+
+      if(moveRight){
+        setTargetAngle(targetAngle + 1)
+      }
+      else {
+        setTargetAngle(targetAngle - 1)
+      }
+
+    }, 100);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [targetAngle]);
 
   const filledArc = arc()
     .innerRadius(0.65)
