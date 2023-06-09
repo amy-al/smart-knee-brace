@@ -79,9 +79,22 @@ export default function VidApp() {
       <div className="container">
      
       <div className="gauge">
-        <Stretch_sensor/>
+        <Stretch_sensor sensor_width="15rem"/>
       </div>
 
+
+      <div className="timer-container">
+        <div className="timer">{timer.toFixed(1)}</div>
+        {paused ? (
+            <button className="start-timer" onClick={handleStartTimer}>
+              Start
+            </button>
+          ) : (
+            <button className="reset-timer" onClick={handleResetTimer}>
+              Reset Timer
+            </button>
+          )}
+      </div>
 
       <div className="video-top">
         <div className="previous-video">{previousVideo.name}</div>
@@ -99,18 +112,6 @@ export default function VidApp() {
         />
       </div>
 
-      <div className="timer-container">
-        <div className="timer">{timer.toFixed(1)}</div>
-        {paused ? (
-            <button className="start-timer" onClick={handleStartTimer}>
-              Start
-            </button>
-          ) : (
-            <button className="reset-timer" onClick={handleResetTimer}>
-              Reset Timer
-            </button>
-          )}
-      </div>
       <div className="navigation-container">
         <button
           className="previous-button"

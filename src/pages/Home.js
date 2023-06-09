@@ -24,9 +24,17 @@ const options = [
 const val = localStorage.getItem("sensorValue");
 console.log(val)
 
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    fontSize: '1.5rem',
+    minHeight: '50px',
+    width: '50vh'
+  }),
+};
 
 const DropdownMenu = () => (
-  <Select options={options} />
+  <Select options={options} styles={customStyles}/>
 )
 
 const handleClick = () => {
@@ -36,21 +44,30 @@ const handleClick = () => {
   
 const Home = () => {
   return (
-    <div className="main-page">
-      <h1>Welcome to your Smart Knee Brace!</h1>
-      <h2>Select your knee injury:</h2>
-      <DropdownMenu/>
-      <br />
-      <ul>
-        <button className='button-style'>
-          {/* Endpoint to route to About component */}
-          <Link className="button-style" to="/video">Excercises</Link>
-        </button>
-        <button className='button-style'>
-          {/* Endpoint to route to About component */}
-          <Link className="button-style" to="/calibration">Calibrate</Link>
-        </button>
-      </ul>
+    <div>
+      <div className="navbar">
+      <Link className="home-button"
+            tabIndex={-1}
+            to="/"
+      >
+      </Link>
+    </div>
+      <div className="main-page">
+        <h1>Welcome to your Smart Knee Brace!</h1>
+        <h2>Select your knee injury:</h2>
+          <DropdownMenu/>
+        <br />
+        <ul>
+          <button className='button-style'>
+            {/* Endpoint to route to About component */}
+            <Link className="button-style" to="/video">Excercises</Link>
+          </button>
+          <button className='button-style'>
+            {/* Endpoint to route to About component */}
+            <Link className="button-style" to="/calibration">Calibrate</Link>
+          </button>
+        </ul>
+      </div>
     </div>
   );
 };
