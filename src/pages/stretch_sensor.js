@@ -1,7 +1,7 @@
 
 import '../App.css';
 import './stretch_sensor.css'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // import GaugeChart from 'react-gauge-chart';
 import StretchingInterface from '../stretch.js';
@@ -26,7 +26,8 @@ function isWebBLEAvailable(){
 
 
 function Stretch_sensor({ sensor_width = "9em", height = "auto" }) {
-  const [sensorReading, setSensorReading] = useState(-1);
+  //const [sensorReading, setSensorReading] = useState(-1);
+  let sensorReading = 0
   const readingDisplay = sensorReading !== null ? <p>{sensorReading}</p> : -1;
   console.log("readingDisplay", readingDisplay)
 
@@ -75,33 +76,37 @@ const Gauge = ({
   const angle = angleScale(percent)
   // console.log("angle", angle);
 
+
+
   const [targetAngle, setTargetAngle] = useState(0);
+  const [moveRight, setMoveRight] = useState(null);
 
   useEffect(() => {
 
-    let moveRight = null;
+    
     const interval = setInterval(() => {
 
-      if(targetAngle >= 1.0){
-        moveRight = false; 
+      if(targetAngle > 1.0){
+        setMoveRight(false)
       }
 
-      if(targetAngle <= 0.0 || moveRight == null){
-        moveRight = true; 
+      if(targetAngle < 0.0 || moveRight == null){
+        setMoveRight(true)
       }
 
 
       if(moveRight){
-        setTargetAngle(targetAngle + 1)
+        setTargetAngle(targetAngle + 0.01)
       }
       else {
-        setTargetAngle(targetAngle - 1)
+        setTargetAngle(targetAngle - 0.01)
       }
+
 
       console.log("targetAngle", targetAngle)
       console.log("moveRight", moveRight)
 
-    }, 1500);
+    }, 10);
 
     return () => {
       clearInterval(interval);
@@ -264,7 +269,8 @@ const getCoordsOnArc = (angle, offset=10) => [
     const voltage = reading / 1023.0 * 3.3
     const resistance = (voltage * 1000) / (3.3 - voltage)
     const length = resistance / 350.0 
-    setSensorReading(length.toFixed(2))
+    //setSensorReading(length.toFixed(2))
+    sensorReading = length.toFixed(2)
     localStorage.setItem("sensorValue", length.toFixed(2));
   }
 
