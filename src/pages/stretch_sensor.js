@@ -1,5 +1,6 @@
 
 import '../App.css';
+import './stretch_sensor.css'
 import { useState, useEffect } from 'react';
 
 // import GaugeChart from 'react-gauge-chart';
@@ -13,6 +14,7 @@ import { format } from "d3-format"
 import Calibration from './Calibration';
 
 
+
 function isWebBLEAvailable(){
   if(!navigator.bluetooth){
       console.log("Web Bluetooth is not available.")
@@ -23,14 +25,19 @@ function isWebBLEAvailable(){
 
 
 
-function Stretch_sensor() {
+function Stretch_sensor({ sensor_width = "9em", height = "auto" }) {
   const [sensorReading, setSensorReading] = useState(-1);
-  const readingDisplay = sensorReading !== -1 ? <p>{sensorReading}</p> : null;
-  // console.log("readingDisplay", readingDisplay)
+  const readingDisplay = sensorReading !== null ? <p>{sensorReading}</p> : -1;
+  console.log("readingDisplay", readingDisplay)
 
   const calibrationValue = localStorage.getItem("calibrationValue")
-  const adjustedcalibrationValue = calibrationValue != null ? calibrationValue : 1;
-  // console.log("Calibration Value", adjustedcalibrationValue)
+  var adjustedcalibrationValue = 1
+
+  if (calibrationValue !== "null"){
+    adjustedcalibrationValue = calibrationValue
+  }
+
+  console.log("Calibration Value", adjustedcalibrationValue)
 
 // Gauge
 const Gauge = ({
@@ -39,9 +46,13 @@ const Gauge = ({
   value=(sensorReading / adjustedcalibrationValue).toFixed(2),
   min=0,
   max=1,
-  label="Stretch reading",
+  label="Stretch Reading",
   units="Inches",
 }) => {
+
+  console.log("Value", value)
+  console.log("Sensor Reading", sensorReading)
+  console.log("Calibration Value", adjustedcalibrationValue)
   const backgroundArc = arc()
     .innerRadius(0.65)
     .outerRadius(1)
@@ -106,7 +117,7 @@ const Gauge = ({
         textAlign: "center",
       }}>
       <svg style={{overflow: "visible"}}
-        width="9em"
+        width={sensor_width}
         viewBox={[
           -1, -1,
           2, 1,
@@ -170,7 +181,7 @@ const Gauge = ({
       </svg>
 
       <div style={{
-        marginTop: "0.4em",
+        marginTop: "1em",
         fontSize: "3em",
         lineHeight: "1em",
         fontWeight: "900",
@@ -217,19 +228,12 @@ const getCoordsOnArc = (angle, offset=10) => [
   // does classname matter here?
   return (
     <div className="App"> 
-      <button onClick={connectBluetooth}>
-        Get reading
+      <button className='connect-button' onClick={connectBluetooth}>
+        Connect
       </button>
       <div>
         < Gauge>
         </Gauge>
-        {/* <Calibration stretch_value={readingDisplay} onCalibrationValue={handleCalibrationValue}></Calibration> */}
-        {/* <GaugeChart id="stretch-gauge"
-          nrOfLevels={20}
-          percent={(sensorReading - 2) / 4}
-          textColor={"#123456"}
-          needleColor={"#000000"}
-        /> */}
       </div>
     </div>
   );

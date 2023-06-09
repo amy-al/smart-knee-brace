@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Calibration.css';
 import Stretch_sensor from './stretch_sensor';
+import { FaHome } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const Calibration = () => {
   const [countdown, setCountdown] = useState(10); // Countdown timer value
@@ -41,28 +43,41 @@ const Calibration = () => {
   };
 
   return (
-    <div className="calibration-container">
-      <Stretch_sensor/>
-      <h2>Calibration</h2>
-      {countdown === 0 ? (
-        <div>
-          <p className="calibration-value">Calibration value: {calibrationValue}</p>
-          <button className="reset-timer" onClick={handleResetTimer}>
-            Reset
-          </button>
-        </div>
-      ) : (
-        <div>
-          <p>Extend your knee as the countdown timer runs:</p>
-          <div className="timer">{countdown}</div>
-          {countdown != 10 && <p className="calibration-value">Calibration value: {calibrationValue}</p>}
-        </div>
-      )}
-      {countdown === 10 && (
-        <button className="start-timer" onClick={handleStartTimer}>
-          Start
-        </button>
-      )}
+    <div>
+        <div className="navbar">
+          <Link className="home-button"
+                tabIndex={-1}
+                to="/"
+          >
+            <FaHome />
+          </Link>
+      </div>
+      <h1 className="calibration-title">Calibration</h1>
+      <div className="horizontal-container">
+          <div className='stretch-sensor-container'>
+            <Stretch_sensor sensor_width='25em'/>
+          </div>
+          <div className="calibration-container">
+            {countdown === 0 ? (
+              <div>
+                <p className="calibration-value">Calibration value: {calibrationValue}</p>
+                <button className="reset-timer" onClick={handleResetTimer}>
+                  Reset
+                </button>
+              </div>
+            ) : (
+              <div>
+                {countdown != 10 && <p className="large-text">Stretch Your Knee As Far As You Can!</p>}
+                {countdown != 10 && <div className="timer">{countdown}</div>}
+              </div>
+            )}
+            {countdown === 10 && (
+              <button className="calibrate-button" onClick={handleStartTimer}>
+                Calibrate!
+              </button>
+            )}
+          </div>
+      </div>
     </div>
   );
 };

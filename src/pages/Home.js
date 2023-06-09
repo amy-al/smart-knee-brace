@@ -41,26 +41,15 @@ const Home = () => {
       <h2>Select your knee injury:</h2>
       <DropdownMenu/>
       <br />
-      <button onClick={handleClick}>
-      Stretch!
-    </button>
       <ul>
-        <li>
-          {/* Endpoint to route to Home component */}
-          <Link to="/">Home</Link>
-        </li>
-        <li>
+        <button className='button-style'>
           {/* Endpoint to route to About component */}
-          <Link to="/stretch">Stretch Sensor Reading</Link>
-        </li>
-        <li>
+          <Link className="button-style" to="/video">Excercises</Link>
+        </button>
+        <button className='button-style'>
           {/* Endpoint to route to About component */}
-          <Link to="/video">Video With Timer</Link>
-        </li>
-        <li>
-          {/* Endpoint to route to About component */}
-          <Link to="/calibration">Calibrate</Link>
-        </li>
+          <Link className="button-style" to="/calibration">Calibrate</Link>
+        </button>
       </ul>
     </div>
   );
