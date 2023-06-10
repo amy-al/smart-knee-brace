@@ -60,7 +60,7 @@ const Home = () => {
         <ul>
           <button className='button-style'>
             {/* Endpoint to route to About component */}
-            <Link className="button-style" to="/video">Excercises</Link>
+            <Link className="button-style" to="/video">Exercises</Link>
           </button>
           <button className='button-style'>
             {/* Endpoint to route to About component */}

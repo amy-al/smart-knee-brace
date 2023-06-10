@@ -7,10 +7,10 @@ import Stretch_sensor from './stretch_sensor';
 import Timer from "./Timer";
 
 const videos = [
-  { id: 1, src: "https://gfycat.com/ifr/adeptimpurecanadagoose", name: "Video 1" },
-  { id: 2, src: "https://www.youtube.com/embed/ikt6NME0k9E", name: "Video 2"  },
-  { id: 3, src: "https://www.youtube.com/embed/zzoRfu1gzC0", name: "Video 3"  },
-  { id: 4, src: "https://www.youtube.com/embed/bvryJd1FqyQ", name: "Video 4"  }
+  { id: 1, src: "https://gfycat.com/ifr/briskblindcirriped", name: "Video 1" },
+  { id: 2, src: "https://gfycat.com/ifr/littlegrippinggavial", name: "Video 2"  },
+  { id: 3, src: "https://gfycat.com/ifr/wideevengull", name: "Video 3"  },
+  { id: 4, src: "https://gfycat.com/ifr/amazinghollowhedgehog", name: "Video 4"  }
 ];
 
 

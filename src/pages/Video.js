@@ -9,7 +9,7 @@ import VidDisplay from "./Video_Display";
 
 const videos = [
   { id: 1, src: "https://gfycat.com/ifr/adeptimpurecanadagoose", name: "Video 1" },
-  { id: 2, src: "https://www.youtube.com/embed/ikt6NME0k9E", name: "Video 2"  },
+  { id: 2, src: "https://gfycat.com/wellinformedscratchydutchsmoushond", name: "Video 2"  },
   { id: 3, src: "https://www.youtube.com/embed/zzoRfu1gzC0", name: "Video 3"  },
   { id: 4, src: "https://www.youtube.com/embed/bvryJd1FqyQ", name: "Video 4"  }
 ];

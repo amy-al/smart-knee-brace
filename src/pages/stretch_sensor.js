@@ -105,7 +105,7 @@ const Gauge = ({
       console.log("targetAngle", targetAngle)
       console.log("moveRight", moveRight)
 
-    }, 10);
+    }, 5);
 
     return () => {
       clearInterval(interval);
